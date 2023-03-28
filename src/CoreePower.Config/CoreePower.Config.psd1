@@ -12,7 +12,7 @@
 RootModule = 'CoreePower.Config.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.0.8'
+ModuleVersion = '0.0.0.12'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -69,7 +69,7 @@ RequiredModules = @()
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'ConfigDump' , 'Update-PowerShellGet' , 'Update-PowerShellGetUser' , 'Coree.Publish-Module'
+FunctionsToExport = 'ConfigDump' , 'Update-PowerShellGet' , 'Update-PowerShellGetUser' , 'CoreePower.Publish-Module'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
@@ -78,7 +78,7 @@ CmdletsToExport = '*'
 VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = 'dmp','uppg' , 'uppgu' , 'cpm'
+AliasesToExport = 'dmp','uppg' , 'uppgu' , 'cppm'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()

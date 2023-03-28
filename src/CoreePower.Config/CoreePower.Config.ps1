@@ -24,7 +24,7 @@ function Coree.Update-PowerShellGetUser {
     Install-Module PowerShellGet -AllowClobber -Force -Scope CurrentUser | Out-Null
 }
 
-function Coree-Publish-Module {
+function CoreePower-Publish-Module {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]   
     param(
         [Parameter(Mandatory=$true)]
@@ -82,9 +82,8 @@ function Coree-Publish-Module {
         return
     }
 
-    $NuGetAPIKey = Get-Content -Path "$keyFileFullName"
+    [string]$NuGetAPIKey = Get-Content -Path "$($keyFileFullName.FullName)"
 
     Publish-Module -Path "$Path" -NuGetApiKey "$NuGetAPIKey" -Repository "PSGallery" -Verbose
 
 }
-
