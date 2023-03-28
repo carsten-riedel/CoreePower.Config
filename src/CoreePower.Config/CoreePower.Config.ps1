@@ -71,8 +71,8 @@ function Coree-Publish-Module {
 
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-    $PackageProviderModule = Get-InstalledModule -Name PackageManagement -MinimumVersion 1.4.8.1 -Scope CurrentUser -ErrorAction SilentlyContinue
-    $PowerShellGetModule = Get-InstalledModule -Name PowerShellGet -MinimumVersion 2.2.5 -Scope CurrentUser -ErrorAction SilentlyContinue
+    $PackageProviderModule = Get-InstalledModule -Name PackageManagement -MinimumVersion 1.4.8.1 -ErrorAction SilentlyContinue
+    $PowerShellGetModule = Get-InstalledModule -Name PowerShellGet -MinimumVersion 2.2.5 -ErrorAction SilentlyContinue
 
     if (!$PackageProviderModule -or !$PowerShellGetModule) {
         # Either or both modules are missing or have a lower version, so install/update them
