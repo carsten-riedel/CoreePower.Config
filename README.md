@@ -1,0 +1,1 @@
+# CoreePower.Config
