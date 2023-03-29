@@ -27,9 +27,14 @@ function Coree.Update-PowerShellGetUser {
 function CoreePower-Publish-Module {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]   
     param(
-        [Parameter(Mandatory=$true)]
-        [string] $Path
+        [string] $Path = ""
     )
+
+    if ($Path -eq "")
+    {
+        $loc = Get-Location
+        $Path = $loc.Path
+    }
 
     $Path = $Path.TrimEnd('\')
 

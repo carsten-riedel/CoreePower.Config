@@ -2,6 +2,8 @@
     CoreePower.Config root module
 #>
 
+Import-Module -Name CoreePower.Lib -MinimumVersion 0.0.0.4
+
 . "$PSScriptRoot\CoreePower.Config.ps1"
 
 function ConfigDump{
@@ -22,14 +24,20 @@ function Update-PowerShellGetUser{
     Coree.Update-PowerShellGetUser
 }
 
-function CoreePower.Publish-Module{
+function CoreePower.Publish-Module {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
     [alias("cppm")]
     param(
-        [Parameter(Mandatory=$true)]
-        [string] $Path
+         [string] $Path = ""
     )
-    CoreePower-Publish-Module -Path "$Path"
+    if ($Path -eq "")
+    {
+        CoreePower-Publish-Module
+    }
+    else {
+        CoreePower-Publish-Module -Path "$Path"
+    }
+    
 }
 
 
