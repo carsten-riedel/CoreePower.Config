@@ -42,6 +42,18 @@ function CoreePower-Publish-Module {
     $psd1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psd1" } | Select-Object BaseName
     $psm1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psm1" } | Select-Object BaseName
 
+    if($psd1BaseName.Count -eq 0)
+    {
+        Write-Error "Error: no powerShell module manifest files found. Please ensure that there is one .psd1 file in the directory and try again."
+        return
+    }
+
+    if($psm1BaseName.Count -eq 0)
+    {
+        Write-Error "Error: no root module files found. Please ensure that there is one .psm1 file in the directory and try again."
+        return
+    }
+
     if($psd1BaseName.Count -gt 1)
     {
         Write-Error "Error: multiple module definition files found. Please ensure that there is only one .psd1 file in the directory and try again."

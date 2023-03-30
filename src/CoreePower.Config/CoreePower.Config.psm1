@@ -2,7 +2,7 @@
     CoreePower.Config root module
 #>
 
-Import-Module -Name CoreePower.Lib -MinimumVersion 0.0.0.4
+Import-Module -Name CoreePower.Lib -MinimumVersion 0.0.0.6
 
 . "$PSScriptRoot\CoreePower.Config.ps1"
 
