@@ -1,10 +1,11 @@
 # CoreePower.Config
 
 
-Copy and paste to cmd or powershell (Set the excution policy to bypass to run the commands)
+This command updates your PowerShell PackageProvider and PowerShellGet to get the latest updates from the PowerShell gallery and installs CoreePower.Config from the same gallery. The goal is to get CoreePower.Config running on your system. To run the command, copy and paste it into your cmd or PowerShell. It also sets the ExecutionPolicy of the current user to bypass to prevent PowerShell from blocking the script.
+Note that this command assumes that you have PowerShell 5.0 or later installed on your system.
 
 ```
-powershell.exe -ExecutionPolicy Bypass -Command "& {Install-Module -Name CoreePower.Config -Scope CurrentUser -Force; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass}"
+powershell.exe -ExecutionPolicy Bypass -Command "& { Install-PackageProvider -Name NuGet -Force -Scope CurrentUser | Out-Null ; Install-Module PowerShellGet -AllowClobber -Force -Scope CurrentUser | Out-Null  ; Install-Module -Name CoreePower.Config -Scope CurrentUser -Force | Out-Null ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass }"
 ```
 
 
