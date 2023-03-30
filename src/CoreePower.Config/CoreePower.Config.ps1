@@ -39,8 +39,8 @@ function CoreePower-Publish-Module {
     $Path = $Path.TrimEnd('\')
 
     $LastDirectory = Split-Path -Path $Path -Leaf
-    $psd1BaseName = Get-ChildItem -Path $Path -Recurse | Where-Object { $_.Extension -eq ".psd1" } | Select-Object BaseName
-    $psm1BaseName = Get-ChildItem -Path $Path -Recurse | Where-Object { $_.Extension -eq ".psm1" } | Select-Object BaseName
+    $psd1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psd1" } | Select-Object BaseName
+    $psm1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psm1" } | Select-Object BaseName
 
     if($psd1BaseName.Count -gt 1)
     {
@@ -92,5 +92,4 @@ function CoreePower-Publish-Module {
     Publish-Module -Path "$Path" -NuGetApiKey "$NuGetAPIKey" -Repository "PSGallery" -Verbose
 
 }
-
 
