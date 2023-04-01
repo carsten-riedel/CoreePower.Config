@@ -12,7 +12,7 @@
 RootModule = 'CoreePower.Config.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.0.23'
+ModuleVersion = '0.0.0.33'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -54,7 +54,7 @@ Description = 'Powershell module for basic configuration'
 RequiredModules = @(
     @{
         ModuleName = 'CoreePower.Lib'
-        ModuleVersion = '0.0.0.4'
+        ModuleVersion = '0.0.0.14'
     }
 )
 
@@ -74,7 +74,7 @@ RequiredModules = @(
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'ConfigDump' , 'Update-PowerShellGet' , 'Update-PowerShellGetUser' , 'CoreePower.Publish-Module'
+FunctionsToExport = 'ConfigDump' , 'Update-PowerShellGet' , 'Update-PowerShellGetUser' , 'CoreePower.Publish-Module' , 'AddToPathEnviromentVariable','foo'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
@@ -83,7 +83,7 @@ CmdletsToExport = '*'
 VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = 'dmp','uppg' , 'uppgu' , 'cppm'
+AliasesToExport = 'dmp','uppg' , 'uppgu' , 'cppm' , 'addenvpath'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
@@ -103,7 +103,7 @@ PrivateData = @{
         Tags = 'configuration', 'windows'
 
         # A URL to the license for this module.
-        LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.23/Content/LICENSE.txt'
+        LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.33/Content/LICENSE.txt'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/carsten-riedel/CoreePower.Config'

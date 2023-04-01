@@ -105,3 +105,40 @@ function CoreePower-Publish-Module {
 
 }
 
+function AddToPathEnviromentVariable {
+    [alias("addenvpath")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Path,
+        [Scope]$Scope = [Scope]::CurrentUser
+    )
+
+    # Check if the current process can execute in the desired scope
+    if (-not(CanExecuteInDesiredScope -Scope $Scope))
+    {
+        return
+    }
+    
+    if ($Scope -eq [Scope]::CurrentUser) {
+
+        $USERPATHS = [System.Environment]::GetEnvironmentVariable("PATH",[System.EnvironmentVariableTarget]::User)
+        $NEW = "$USERPATHS;$Path"
+        [System.Environment]::SetEnvironmentVariable("PATH",$NEW,[System.EnvironmentVariableTarget]::User)
+
+    }
+    elseif ($Scope -eq [Scope]::LocalMachine) {
+
+        $MACHINEPATHS = [System.Environment]::GetEnvironmentVariable("PATH",[System.EnvironmentVariableTarget]::Machine)
+        $NEW = "$MACHINEPATHS;$Path"
+        [System.Environment]::SetEnvironmentVariable("PATH",$NEW,[System.EnvironmentVariableTarget]::Machine)
+    }
+}
+
+
+function foo {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    param()
+    Generate-GuidAsString
+}
