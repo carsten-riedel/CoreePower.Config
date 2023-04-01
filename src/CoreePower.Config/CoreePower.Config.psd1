@@ -12,7 +12,7 @@
 RootModule = 'CoreePower.Config.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.0.33'
+ModuleVersion = '0.0.0.35'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -74,7 +74,15 @@ RequiredModules = @(
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'ConfigDump' , 'Update-PowerShellGet' , 'Update-PowerShellGetUser' , 'CoreePower.Publish-Module' , 'AddToPathEnviromentVariable','foo'
+FunctionsToExport = 
+'Update-PowerShellGet' ,
+'Update-PowerShellGetUser' ,
+'CoreePower.Publish-Module' ,
+'AddPathEnviromentVariable',
+'GroupAndSortPathEnviromentVariable',
+'DeletePathEnviromentVariable',
+'AddEnviromentVariable',
+'DeleteEnviromentVariable'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
@@ -83,7 +91,15 @@ CmdletsToExport = '*'
 VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = 'dmp','uppg' , 'uppgu' , 'cppm' , 'addenvpath'
+AliasesToExport =
+'uppg' ,
+'uppgu' ,
+'cppm' ,
+'addenvpath',
+'groupsortenvpath',
+'delenvpath',
+'addenv',
+'delenv'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
@@ -103,7 +119,7 @@ PrivateData = @{
         Tags = 'configuration', 'windows'
 
         # A URL to the license for this module.
-        LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.33/Content/LICENSE.txt'
+        LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.35/Content/LICENSE.txt'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/carsten-riedel/CoreePower.Config'
