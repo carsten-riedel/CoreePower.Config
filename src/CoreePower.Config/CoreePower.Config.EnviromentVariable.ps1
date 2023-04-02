@@ -412,10 +412,3 @@ function UpdateModuleVersion {
         Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
     }
 }
-
-UpdateModuleVersion
-
-
-
-
-
