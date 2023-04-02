@@ -1,6 +1,6 @@
 @{
     RootModule = 'CoreePower.Config.psm1'
-    ModuleVersion = '0.0.0.46'
+    ModuleVersion = '0.0.0.47'
     GUID = 'e9f6459a-6b83-4967-a305-73eba1857637'
     Author = 'Carsten Riedel'
     CompanyName = 'Carsten Riedel'
@@ -8,7 +8,7 @@
     FunctionsToExport =
         'Update-PowerShellGet',
         'Update-PowerShellGetUser',
-        'CoreePower.Publish-Module',
+        'PublishModule',
         'AddPathEnviromentVariable',
         'GroupAndSortPathEnviromentVariable',
         'DeletePathEnviromentVariable',
@@ -18,7 +18,7 @@
     AliasesToExport =
         'uppg',
         'uppgu',
-        'cppm',
+        'pm',
         'addenvpath',
         'groupsortenvpath',
         'delenvpath',
@@ -28,7 +28,7 @@
     CmdletsToExport = '*'
     Copyright = '(c) 2022 Carsten Riedel. All rights reserved.'
     PrivateData = @{PSData = @{
-            LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.46/Content/LICENSE.txt'
+            LicenseUri = 'https://www.powershellgallery.com/packages/CoreePower.Config/0.0.0.47/Content/LICENSE.txt'
             Tags =
                 'configuration',
                 'windows'

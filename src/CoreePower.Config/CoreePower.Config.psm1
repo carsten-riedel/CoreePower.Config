@@ -26,20 +26,7 @@ function Update-PowerShellGetUser{
     Coree.Update-PowerShellGetUser
 }
 
-function CoreePower.Publish-Module {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
-    [alias("cppm")]
-    param(
-         [string] $Path = ""
-    )
-    if ($Path -eq "")
-    {
-        CoreePower-Publish-Module
-    }
-    else {
-        CoreePower-Publish-Module -Path "$Path"
-    }
-}
+
 
 
 

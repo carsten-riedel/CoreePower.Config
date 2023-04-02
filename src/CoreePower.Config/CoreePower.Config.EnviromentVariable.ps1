@@ -19,8 +19,9 @@ function Coree.Update-PowerShellGetUser {
     Install-Module PowerShellGet -AllowClobber -Force -Scope CurrentUser | Out-Null
 }
 
-function CoreePower-Publish-Module {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]   
+function PublishModule {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    [alias("pm")]   
     param(
         [string] $Path = ""
     )
