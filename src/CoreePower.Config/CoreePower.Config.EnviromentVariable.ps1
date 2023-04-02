@@ -1,3 +1,6 @@
+
+. "$PSScriptRoot\CoreePower.Config.Imports.ps1"
+
 function Coree.Update-PowerShellGet {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]   
     param()
@@ -339,11 +342,11 @@ function DeleteEnviromentVariable {
         [Scope]$Scope = [Scope]::CurrentUser
     )
 
-        # Check if the current process can execute in the desired scope
-        if (-not(CanExecuteInDesiredScope -Scope $Scope))
-        {
-            return
-        }
+    # Check if the current process can execute in the desired scope
+    if (-not(CanExecuteInDesiredScope -Scope $Scope))
+    {
+        return
+    }
 
     if ($Scope -eq [Scope]::CurrentUser) {
         [System.Environment]::SetEnvironmentVariable($Name, $null, [System.EnvironmentVariableTarget]::User)
@@ -353,3 +356,47 @@ function DeleteEnviromentVariable {
     }
 }
 
+
+function foox {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    [alias("foo")]
+    param(
+        [string] $Path = ""
+    )
+
+    if ($Path -eq "")
+    {
+        $loc = Get-Location
+        $Path = $loc.Path
+    }
+
+    $Path = $Path.TrimEnd('\')
+
+    $psd1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psd1" } | Select-Object FullName
+
+    if($psd1BaseName.Count -eq 0)
+    {
+        Write-Error "Error: no powerShell module manifest files found. Please ensure that there is one .psd1 file in the directory and try again."
+        return
+    }
+
+    if($psd1BaseName.Count -gt 1)
+    {
+        Write-Error "Error: multiple module definition files found. Please ensure that there is only one .psd1 file in the directory and try again."
+        return
+    }
+
+    $Data = Import-PowerShellDataFile -Path "$($psd1BaseName.FullName)"
+
+    $ver = [Version]$Data.ModuleVersion
+    $newver = [Version]::new($ver.Major, $ver.Minor, $ver.Build, ($ver.Revision + 1))
+    $Data.ModuleVersion = $newver
+    $Data.PrivateData.PSData.LicenseUri = $Data.PrivateData.PSData.LicenseUri.Replace($ver, $newver)
+    
+    $towrite = Export-PowerShellCustomObjectWrapper -Prefix "@{" -Suffix "}" -InputObject $Data  -IndentLevel 0  -CustomOrder @("RootModule", "ModuleVersion", "GUID","Author","CompanyName","Description","FunctionsToExport","AliasesToExport")
+
+    # Write the string to a file
+    Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
+}
+
+foox

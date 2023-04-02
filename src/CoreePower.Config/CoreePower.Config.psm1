@@ -2,9 +2,14 @@
     CoreePower.Config root module
 #>
 
-
-# Import the module, but note that function names must either use a non-verb name or an approved verb prefix, otherwise a warning will be displayed. 
-Import-Module -Name CoreePower.Lib -MinimumVersion 0.0.0.14
+<#
+To facilitate PowerShell script debugging, module imports should be handled in a separate 'CoreePower.Config.Imports.ps1' file. 
+This is generally not necessary, as the module dependency is usually specified in the RequiredModules 
+section of the manifest. However, in cases where the module dependency is not executed, cause of using it with VS Code 
+there are issues with outdated or missing modules during debugging, importing modules in a separate file can help 
+ensure that the latest version of the module is available for debugging purposes.
+Please add the dot source of . "$PSScriptRoot\CoreePower.Config.Imports.ps1" to every .ps1 file.
+#>
 
 . "$PSScriptRoot\CoreePower.Config.EnviromentVariable.ps1"
 
