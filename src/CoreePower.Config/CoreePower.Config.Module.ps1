@@ -81,6 +81,54 @@ function PublishModule {
 
 }
 
+function Merge-Hashtable($target, $source) {
+    $source.Keys | ForEach-Object {
+        $key = $_
+        if (-not $target.ContainsKey($key)) {
+            # Add new key-value pairs
+            $target[$key] = $source[$key]
+        } elseif ($target[$key] -eq '' -and $source[$key] -ne '') {
+            # Overwrite the value when target key's value is empty
+            $target[$key] = $source[$key]
+        } elseif ($source[$key] -is [Hashtable]) {
+            # Merge nested hashtables
+            Merge-Hashtable $target[$key] $source[$key]
+        }
+    }
+}
+
+# Modify Merge-Object function to handle nested hashtables
+function Merge-Object($target, $source) {
+    $source.PSObject.Properties | ForEach-Object {
+        $propertyName = $_.Name
+        $propertyValue = $_.Value
+
+        if ($target.PSObject.Properties.Name.Contains($propertyName)) {
+            if ($propertyValue -is [PSCustomObject]) {
+                # Initialize the target property if it's null
+                if ($null -eq $target.$propertyName) {
+                    $target.$propertyName = [PSCustomObject]@{}
+                }
+                Merge-Object $target.$propertyName $propertyValue
+            } elseif ($propertyValue -is [Array]) {
+                # Merge arrays
+                $target.$propertyName += $propertyValue
+            } elseif ($propertyValue -is [Hashtable]) {
+                # Merge hashtables
+                if ($null -eq $target.$propertyName) {
+                    $target.$propertyName = @{}
+                }
+                Merge-Hashtable $target.$propertyName $propertyValue
+            }
+        } else {
+            $target | Add-Member -MemberType $_.MemberType -Name $propertyName -Value $propertyValue
+        }
+    }
+}
+
+
+
+
 function UpdateModuleVersion {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
     [alias("umv")]
@@ -126,15 +174,77 @@ function UpdateModuleVersion {
     $newver = [Version]::new($ver.Major, $ver.Minor, $ver.Build, ($ver.Revision + 1))
     $Data.ModuleVersion = [string]$newver
     $Data.PrivateData.PSData.LicenseUri = $Data.PrivateData.PSData.LicenseUri.Replace($ver, $newver)
+
+    $psd1layoutx = [pscustomobject]@{
+        RootModule = ''
+        ModuleVersion = ''
+        CompatiblePSEditions = @()
+        GUID = ''
+        Author = ''
+        CompanyName = ''
+        Copyright = ''
+        Description = ''
+        PowerShellVersion = ''
+        PowerShellHostName = ''
+        PowerShellHostVersion = ''
+        DotNetFrameworkVersion = ''
+        CLRVersion = ''
+        ProcessorArchitecture = ''
+        RequiredModules = @()
+        RequiredAssemblies = @()
+        ScriptsToProcess = @()
+        TypesToProcess = @()
+        FormatsToProcess = @()
+        NestedModules = @()
+        FunctionsToExport = @()
+        CmdletsToExport = @()
+        VariablesToExport = ''
+        AliasesToExport = @()
+        DscResourcesToExport = @()
+        ModuleList = @()
+        FileList = @()
+        PrivateData = @{PSData = @{
+                LicenseUri = ''
+                Tags = ' '
+                ProjectUri = ''
+                IconUri = ''
+                ReleaseNotes = ''
+            }}
+        HelpInfoURI = ''
+        DefaultCommandPrefix = ''
+    }
+
+
+
+
+# Merge the properties of the second object into the combined object
+Merge-Object $Data $psd1layoutx 
+
+
+    New-ModuleManifest `
+    -Path "$($psd1BaseName.FullName)" `
+    -GUID "$($Data.GUID)" `
+    -Description "$($Data.Description)" `
+    -LicenseUri "$($Data.PrivateData.PSData.LicenseUri)" `
+    -FunctionsToExport $Data.FunctionsToExport `
+    -AliasesToExport $Data.AliasesToExport  `
+    -ModuleVersion "$($Data.ModuleVersion)" `
+    -RootModule "$($Data.RootModule)" `
+    -Author "$($Data.Author)" `
+    -RequiredModules $Data.RequiredModules  `
+    -CompanyName "$($Data.CompanyName)"  `
+    -Tags $($Data.PrivateData.PSData.Tags)
     
+
+    <#
     $towrite = ConvertToExpression -InputObject $Data
     $towrite = $towrite -replace "^\[pscustomobject\]", ""
 
     if (-not($null -eq $towrite))
     {
-        # Write the string to a file
         Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
     }
+    #>
 }
 
 $psd1layout = [pscustomobject]@{
@@ -271,7 +381,7 @@ function SampleFunction {
     Set-Content -Path "$Path\$ModuleName\$ModuleName.ps1" -Value "$ps1Value"
     Set-Content -Path "$Path\$ModuleName\.key" -Value "$ApiKey"
     Set-Content -Path "$Path\$ModuleName\.gitignore" -Value ".key"
-
+<#
     $psd1layout.Author = "$Author"
     $psd1layout.RootModule = "$ModuleName.psm1"
     $psd1layout.CompanyName = "$Author"
@@ -284,7 +394,22 @@ function SampleFunction {
     $psd1layout.RequiredModules = @(@{ ModuleName = 'Other.Module' ; ModuleVersion = '0.0.0.1' })
     $psd1layout.PrivateData.PSData.LicenseUri = "https://www.powershellgallery.com/packages/$ModuleName/0.0.0.1/Content/LICENSE.txt"
     $psd1layout.PrivateData.PSData.Tags = @("example","module")
+#>
+    New-ModuleManifest `
+    -Path "$Path\$ModuleName\$ModuleName.psd1" `
+    -GUID "$((New-Guid).ToString())" `
+    -Description "$Description" `
+    -LicenseUri "https://www.powershellgallery.com/packages/$ModuleName/0.0.0.1/Content/LICENSE.txt" `
+    -FunctionsToExport @("SampleFunction") `
+    -AliasesToExport @("sf")  `
+    -ModuleVersion "0.0.0.1" `
+    -RootModule "$ModuleName.psm1" `
+    -Author "$Author" `
+    -RequiredModules @(@{ ModuleName = 'Other.Module' ; ModuleVersion = '0.0.0.1' })  `
+    -CompanyName "$Author" `
+    -Tags @("empty","module")
 
+<#
     $towrite = ConvertToExpression -InputObject $psd1layout
 
     $towrite = $towrite -replace "^\[pscustomobject\]", ""
@@ -294,5 +419,8 @@ function SampleFunction {
         # Write the string to a file
         Set-Content -Path "$Path\$ModuleName\$ModuleName.psd1" -Value $towrite
     }
+    #>
 }
 
+#CreateModule -Path "C:\temp" -ModuleName "CoreePower.Module" -Description "Library for module management" -Author "Carsten Riedel" 
+#UpdateModuleVersion -Path "C:\temp\CoreePower.Module"
