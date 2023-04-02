@@ -136,3 +136,163 @@ function UpdateModuleVersion {
         Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
     }
 }
+
+$psd1layout = [pscustomobject]@{
+    RootModule = ''
+    ModuleVersion = ''
+    CompatiblePSEditions = @()
+    GUID = ''
+    Author = ''
+    CompanyName = ''
+    Copyright = ''
+    Description = ''
+    PowerShellVersion = ''
+    PowerShellHostName = ''
+    PowerShellHostVersion = ''
+    DotNetFrameworkVersion = ''
+    CLRVersion = ''
+    ProcessorArchitecture = ''
+    RequiredModules = @()
+    RequiredAssemblies = @()
+    ScriptsToProcess = @()
+    TypesToProcess = @()
+    FormatsToProcess = @()
+    NestedModules = @()
+    FunctionsToExport = @()
+    CmdletsToExport = @()
+    VariablesToExport = ''
+    AliasesToExport = @()
+    DscResourcesToExport = @()
+    ModuleList = @()
+    FileList = @()
+    PrivateData = @{PSData = @{
+            LicenseUri = ''
+            Tags = @()
+            ProjectUri = ''
+            IconUri = ''
+            ReleaseNotes = ''
+        }}
+    HelpInfoURI = ''
+    DefaultCommandPrefix = ''
+}
+
+#CreateModule -Path "C:\temp" -ModuleName "CoreePower.Module" -Description "Library for module management" -Author "Carsten Riedel"
+function CreateModule {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    [alias("crm")]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ModuleName,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Description,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Author,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ApiKey
+    )
+
+    if ($Path -eq "")
+    {
+        $loc = Get-Location
+        $Path = $loc.Path
+    }
+
+    $Path = $Path.TrimEnd('\')
+
+    #$psd1BaseName = Get-ChildItem -Path $Path | Where-Object { $_.Extension -eq ".psd1" } | Select-Object FullName
+
+    # Check if the directory exists
+    if(!(Test-Path $Path)){
+        # Create the directory if it does not exist
+        New-Item -ItemType Directory -Path $Path  | Out-Null
+    }
+
+    # Check if the directory exists
+    if(!(Test-Path "$Path\$ModuleName")){
+        # Create the directory if it does not exist
+        New-Item -ItemType Directory -Path "$Path\$ModuleName" | Out-Null
+    }
+
+    $licenceValue  = @"
+    MIT License
+
+    Copyright (c) $((Get-Date).Year) $Author
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+"@
+
+    $psm1Value  = @"
+<#
+    $ModuleName root module
+#>
+
+Import-Module -Name "Other.Module" -MinimumVersion "0.0.0.1"
+
+. `"`$PSScriptRoot\$ModuleName.ps1`"
+
+"@
+
+    $ps1Value  = @"
+
+function SampleFunction {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
+    [alias("sf")]
+    param()
+    Write-Output "Hello World!"
+}
+
+"@
+
+    Set-Content -Path "$Path\$ModuleName\LICENSE.txt" -Value "$licenceValue"
+    Set-Content -Path "$Path\$ModuleName\$ModuleName.psm1" -Value "$psm1Value"
+    Set-Content -Path "$Path\$ModuleName\$ModuleName.ps1" -Value "$ps1Value"
+    Set-Content -Path "$Path\$ModuleName\.key" -Value "$ApiKey"
+    Set-Content -Path "$Path\$ModuleName\.gitignore" -Value ".key"
+
+    $psd1layout.Author = "$Author"
+    $psd1layout.RootModule = "$ModuleName.psm1"
+    $psd1layout.CompanyName = "$Author"
+    $psd1layout.Copyright = "(c) 2023 $Author. All rights reserved."
+    $psd1layout.Description = $Description
+    $psd1layout.GUID = (New-Guid).ToString()
+    $psd1layout.FunctionsToExport = @("SampleFunction")
+    $psd1layout.AliasesToExport = @("sf")
+    $psd1layout.ModuleVersion = "0.0.0.1"
+    $psd1layout.RequiredModules = @(@{ ModuleName = 'Other.Module' ; ModuleVersion = '0.0.0.1' })
+    $psd1layout.PrivateData.PSData.LicenseUri = "https://www.powershellgallery.com/packages/$ModuleName/0.0.0.1/Content/LICENSE.txt"
+    $psd1layout.PrivateData.PSData.Tags = @("example","module")
+
+    $towrite = ConvertToExpression -InputObject $psd1layout
+
+    $towrite = $towrite -replace "^\[pscustomobject\]", ""
+
+    if (-not($null -eq $towrite))
+    {
+        # Write the string to a file
+        Set-Content -Path "$Path\$ModuleName\$ModuleName.psd1" -Value $towrite
+    }
+}
+

@@ -1,5 +1,4 @@
 
-. "$PSScriptRoot\CoreePower.Config.Imports.ps1"
 
 <#
 .SYNOPSIS
