@@ -386,17 +386,36 @@ function UpdateModuleVersion {
         return
     }
 
-    $Data = Import-PowerShellDataFile -Path "$($psd1BaseName.FullName)"
+    $fileContent = Get-Content -Path "$($psd1BaseName.FullName)" -Raw
+    $index = $fileContent.IndexOf("@{")
+    if($index -ne -1){
+        $fileContent = $fileContent.Substring(0, $index) + $fileContent.Substring($index + 2)
+    }
+    $index = $fileContent.LastIndexOf("}")
+    if($index -ne -1){
+        $fileContent = $fileContent.Substring(0, $index) + $fileContent.Substring($index + 2)
+    }
+
+    $Data  = Invoke-Expression "[PSCustomObject]@{$fileContent}"
 
     $ver = [Version]$Data.ModuleVersion
     $newver = [Version]::new($ver.Major, $ver.Minor, $ver.Build, ($ver.Revision + 1))
     $Data.ModuleVersion = [string]$newver
     $Data.PrivateData.PSData.LicenseUri = $Data.PrivateData.PSData.LicenseUri.Replace($ver, $newver)
     
-    $towrite = Export-PowerShellCustomObjectWrapper -Prefix "@{" -Suffix "}" -InputObject $Data  -IndentLevel 0  -CustomOrder @("RootModule", "ModuleVersion", "GUID","Author","CompanyName","Description","FunctionsToExport","AliasesToExport")
+    $towrite = ConvertToExpression -InputObject $Data
+    $towrite = $towrite -replace "^\[pscustomobject\]", ""
 
-    # Write the string to a file
-    Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
+    if (-not($null -eq $towrite))
+    {
+        # Write the string to a file
+        Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
+    }
 }
+
+UpdateModuleVersion
+
+
+
 
 

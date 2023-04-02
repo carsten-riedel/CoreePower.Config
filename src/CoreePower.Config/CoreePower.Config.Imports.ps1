@@ -25,4 +25,4 @@ function Imports {
 }
 
 #Dont't forget to update RequiredModules in the .psd1 file
-Imports -ModuleName "CoreePower.Lib" -ModuleVersion "0.0.0.16"
+Imports -ModuleName "CoreePower.Lib" -ModuleVersion "0.0.0.20"
