@@ -357,9 +357,9 @@ function DeleteEnviromentVariable {
 }
 
 
-function foox {
+function UpdateModuleVersion {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
-    [alias("foo")]
+    [alias("umv")]
     param(
         [string] $Path = ""
     )
@@ -390,7 +390,7 @@ function foox {
 
     $ver = [Version]$Data.ModuleVersion
     $newver = [Version]::new($ver.Major, $ver.Minor, $ver.Build, ($ver.Revision + 1))
-    $Data.ModuleVersion = $newver
+    $Data.ModuleVersion = [string]$newver
     $Data.PrivateData.PSData.LicenseUri = $Data.PrivateData.PSData.LicenseUri.Replace($ver, $newver)
     
     $towrite = Export-PowerShellCustomObjectWrapper -Prefix "@{" -Suffix "}" -InputObject $Data  -IndentLevel 0  -CustomOrder @("RootModule", "ModuleVersion", "GUID","Author","CompanyName","Description","FunctionsToExport","AliasesToExport")
@@ -399,4 +399,4 @@ function foox {
     Set-Content -Path "$($psd1BaseName.FullName)" -Value $towrite
 }
 
-foox
+
