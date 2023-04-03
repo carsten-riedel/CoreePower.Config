@@ -51,7 +51,7 @@ Function parameters:
 
 #### Example
 ```
-PublishModule -Path "C:\base\github.com\carsten-riedel\CoreePower.Config\src\CoreePower.Config"
+PublishModule -Path "C:\MyModules\MyNewModule"
 ```
 
 This function publishes a PowerShell module to the PowerShell Gallery using the Publish-Module cmdlet, after performing validation checks to ensure that the module directory contains only one .psd1 and one .psm1 file, that the parent directory name, .psd1 filename, and .psm1 filename are all identical, and that a .key file containing the NuGet API key is present in the module directory. If any validation check fails, the function displays an error or warning message and returns without publishing the module.
@@ -65,7 +65,7 @@ Function parameters:
 
 #### Example
 ```
-UpdateModule -Path "C:\MyModules\MyModule"
+UpdateModule -Path "C:\MyModules\MyNewModule"
 ```
 
 The UpdateModule function first checks for a module manifest file (.psd1) in the specified directory. If no manifest file is found, or if multiple manifest files are found, an error message is displayed and the function exits. The function then updates the module version number and other details in the manifest file, such as the license URI, author, description, and required modules. Finally, the function updates the manifest file with the new version number and other changes using the New-ModuleManifest cmdlet.
