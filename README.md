@@ -3,7 +3,7 @@
 
 ```
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force; $nugetProvider = Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue; if (-not($nugetProvider -and $nugetProvider.Version -ge "2.8.5.201")) { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force  } ;
-$Install='PSWindowsUpdate' ; Find-Module -Name @('PackageManagement', 'PowerShellGet', "$Install") -Repository PSGallery | Select-Object Name,Version | Where-Object { -not (Get-Module -ListAvailable -Name $_.Name | Sort-Object Version -Descending | Select-Object -First 1 | Where-Object Version -eq $_.Version) } | ForEach-Object { Install-Module -Name $_.Name -RequiredVersion $_.Version -Scope CurrentUser -Force -AllowClobber ; Import-Module -Name $_.Name -MinimumVersion $_.Version  }
+$Install='CoreePower*' ; Find-Module -Name @('PackageManagement', 'PowerShellGet', "$Install") -Repository PSGallery | Select-Object Name,Version | Where-Object { -not (Get-Module -ListAvailable -Name $_.Name | Sort-Object Version -Descending | Select-Object -First 1 | Where-Object Version -eq $_.Version) } | ForEach-Object { Install-Module -Name $_.Name -RequiredVersion $_.Version -Scope CurrentUser -Force -AllowClobber ; Import-Module -Name $_.Name -MinimumVersion $_.Version  }
 ```
 
 This command updates your PowerShell PackageProvider and PowerShellGet to get the latest updates from the PowerShell gallery and installs CoreePower.Config from the same gallery. The goal is to get CoreePower.Config running on your system. To run the command, copy and paste it into your cmd or PowerShell. It also sets the ExecutionPolicy of the current user to bypass to prevent PowerShell from blocking the script.
